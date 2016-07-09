@@ -30,3 +30,11 @@ Step 4: Let's bypassuac
 Step 5: disable
 
 sc config MfeFfCoreService start= disabled
+
+Step x: misc
+
+sc queryex
+sc config start= disabled
+tasklist /svc | find /I ""
+taskkill -IM /F
+runas /profile /user:domain\user "cmd.exe"
